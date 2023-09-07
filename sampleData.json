@@ -1,0 +1,79 @@
+[
+	{
+		"avg_qpa_given" : 78.5,
+		"salary": 67,
+		"children" : 1,
+		"rating":0.2,
+		"avg_grade_Given": 73.2
+	},
+	{
+		"avg_qpa_given" : 78.5,
+		"salary": 67,
+		"children" : 0,
+		"rating":0.2,
+		"avg_grade_Given": 69.2
+	},
+	{
+		"avg_qpa_given" : 78.5,
+		"salary": 67,
+		"children" : 0,
+		"rating":0.2,
+		"avg_grade_Given": 69
+	},
+	{
+		"avg_qpa_given" : 78.5,
+		"salary": null,
+		"children" : 0,
+		"rating":0.2,
+		"avg_grade_Given": 69
+	},
+	{
+		"avg_qpa_given" : 75.5,
+		"salary": 66.5,
+		"children" : 1,
+		"rating":0.2,
+		"avg_grade_Given": 73.5
+	},
+	{
+		"avg_qpa_given" : 75.5,
+		"salary": 66.5,
+		"children" : 1,
+		"rating":0.4,
+		"avg_grade_Given": null
+	},
+	{
+		"avg_qpa_given" : 75.5,
+		"salary": 66.5,
+		"children" : 0,
+		"rating": 0.3,
+		"avg_grade_Given": 65.5
+	},
+	{
+		"avg_qpa_given" : 75.5,
+		"salary": 66.5,
+		"children" : 0,
+		"rating": 0.2,
+		"avg_grade_Given": 65.5
+	},
+	{
+		"avg_qpa_given" : 75,
+		"salary": null,
+		"children" : 1,
+		"rating": null,
+		"avg_grade_Given": 71
+	},
+	{
+		"avg_qpa_given" : 75,
+		"salary": 64,
+		"children" : 0,
+		"rating": 0.1,
+		"avg_grade_Given": 68
+	},
+	{
+		"avg_qpa_given" : 75,
+		"salary": 64,
+		"children" : 1,
+		"rating": 0.2,
+		"avg_grade_Given": 70.5
+	}
+]
