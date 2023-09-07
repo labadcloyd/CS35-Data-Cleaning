@@ -17,17 +17,48 @@ type SampleData struct {
 
 func main() {
 	deletedRows := DeleteRow()
-	log.Println("Deleted Rows")
-	PrintResult(deletedRows)
+	file, err := os.Create("Deleted_Rows.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	encoder := json.NewEncoder(file)
+	if err := encoder.Encode(deletedRows); err != nil {
+		panic(err)
+	}
+
 	nullRows := SetRowNull()
-	log.Println("Nulled Rows")
-	PrintResult(nullRows)
+	file2, err := os.Create("Nulled_Rows.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file2.Close()
+	encoder2 := json.NewEncoder(file2)
+	if err := encoder2.Encode(nullRows); err != nil {
+		panic(err)
+	}
+
 	meanRows := RowMean()
-	log.Println("Mean Rows")
-	PrintResult(meanRows)
+	file3, err := os.Create("Mean_Rows.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file3.Close()
+	encoder3 := json.NewEncoder(file3)
+	if err := encoder3.Encode(meanRows); err != nil {
+		panic(err)
+	}
+
 	InterpolatedRows := LinearInterpolation()
-	log.Println("Interpolated Rows")
-	PrintResult(InterpolatedRows)
+	file4, err := os.Create("Interpolated_Rows.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file4.Close()
+	encoder4 := json.NewEncoder(file4)
+	if err := encoder4.Encode(InterpolatedRows); err != nil {
+		panic(err)
+	}
 }
 
 func DeleteRow() []SampleData {
