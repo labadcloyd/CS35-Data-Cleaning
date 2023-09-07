@@ -22,6 +22,9 @@ func main() {
 	nullRows := SetRowNull()
 	log.Println("Nulled Rows")
 	PrintResult(nullRows)
+	meanRows := RowMean()
+	log.Println("Mean Rows")
+	PrintResult(meanRows)
 }
 
 func DeleteRow() []SampleData {
@@ -113,6 +116,87 @@ func SetRowNull() []SampleData {
 	return finalData
 }
 
+func RowMean() []SampleData {
+	file, err := os.Open("sampleData.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	dec := json.NewDecoder(file)
+
+	// Read open bracket
+	_, err = dec.Token()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	draftData := []SampleData{}
+	for dec.More() {
+		var m SampleData
+
+		err := dec.Decode(&m)
+		if err != nil {
+			log.Fatal(err)
+		}
+		draftData = append(draftData, m)
+	}
+	Salary_Mean := 0.0
+	Salary_Length := 0
+	Rating_Mean := 0.0
+	Rating_Length := 0
+	Avg_Grade_Given_Mean := 0.0
+	Avg_Grade_Given_Length := 0
+	// Computing mean
+	for i, m := range draftData {
+		if m.Salary != nil {
+			Salary_Mean += *m.Salary
+			Salary_Length += i
+		}
+		if m.Rating != nil {
+			Rating_Mean += *m.Rating
+			Rating_Length += i
+		}
+		if m.Avg_Grade_Given != nil {
+			Avg_Grade_Given_Mean += *m.Avg_Grade_Given
+			Avg_Grade_Given_Length += i
+		}
+	}
+	Salary_Mean = Salary_Mean / float64(Salary_Length)
+	Rating_Mean = Rating_Mean / float64(Rating_Length)
+	Avg_Grade_Given_Mean = Avg_Grade_Given_Mean / float64(Avg_Grade_Given_Length)
+
+	// Saving mean
+	finalData := []SampleData{}
+	for _, m := range draftData {
+		newData := SampleData{
+			Avg_QPA_Given:   m.Avg_QPA_Given,
+			Salary:          m.Salary,
+			Children:        m.Children,
+			Rating:          m.Rating,
+			Avg_Grade_Given: m.Avg_Grade_Given,
+		}
+		if newData.Salary == nil {
+			newData.Salary = new(float64)
+			*newData.Salary = Salary_Mean
+		}
+		if newData.Rating == nil {
+			newData.Rating = new(float64)
+			*newData.Rating = Rating_Mean
+		}
+		if newData.Avg_Grade_Given == nil {
+			newData.Avg_Grade_Given = new(float64)
+			*newData.Avg_Grade_Given = Avg_Grade_Given_Mean
+		}
+		finalData = append(finalData, newData)
+	}
+	_, err = dec.Token()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return finalData
+}
+
 func PrintResult(sample_data []SampleData) {
 	for i, data := range sample_data {
 
@@ -125,48 +209,3 @@ func PrintResult(sample_data []SampleData) {
 			*data.Avg_Grade_Given)
 	}
 }
-
-// func DeleteRow() []SampleData {
-// 	file, err := os.Open("sampleData.json")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return
-// 	}
-// 	defer file.Close()
-
-// 	dec := json.NewDecoder(file)
-
-// 	// Read open bracket
-// 	t, err := dec.Token()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	fmt.Printf("%T: %v\n", t, t)
-
-// 	for dec.More() {
-// 		var m SampleData
-
-// 		err := dec.Decode(&m)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		if m.Salary == nil {
-// 			m.Salary = new(float64)
-// 			*m.Salary = 0.0
-// 		}
-// 		if m.Rating == nil {
-// 			m.Rating = new(float64)
-// 			*m.Rating = 0.0
-// 		}
-// 		if m.Avg_Grade_Given == nil {
-// 			m.Avg_Grade_Given = new(float64)
-// 			*m.Avg_Grade_Given = 0.0
-// 		}
-// 	}
-
-// 	t, err = dec.Token()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	fmt.Printf("%T: %v\n", t, t)
-// }
