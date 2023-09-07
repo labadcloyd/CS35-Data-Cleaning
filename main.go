@@ -25,6 +25,9 @@ func main() {
 	meanRows := RowMean()
 	log.Println("Mean Rows")
 	PrintResult(meanRows)
+	InterpolatedRows := LinearInterpolation()
+	log.Println("Interpolated Rows")
+	PrintResult(InterpolatedRows)
 }
 
 func DeleteRow() []SampleData {
@@ -197,6 +200,71 @@ func RowMean() []SampleData {
 	return finalData
 }
 
+func LinearInterpolation() []SampleData {
+	file, err := os.Open("sampleData.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	dec := json.NewDecoder(file)
+
+	// Read open bracket
+	_, err = dec.Token()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	draftData := []SampleData{}
+	for dec.More() {
+		var m SampleData
+
+		err := dec.Decode(&m)
+		if err != nil {
+			log.Fatal(err)
+		}
+		draftData = append(draftData, m)
+	}
+
+	// Saving mean
+	finalData := []SampleData{}
+	for i, m := range draftData {
+		newData := SampleData{
+			Avg_QPA_Given:   m.Avg_QPA_Given,
+			Salary:          m.Salary,
+			Children:        m.Children,
+			Rating:          m.Rating,
+			Avg_Grade_Given: m.Avg_Grade_Given,
+		}
+		if newData.Salary == nil {
+			if i+1 < len(draftData) && i-1 >= 0 {
+				newData.Salary = new(float64)
+				mean := (*draftData[i+1].Salary + *draftData[i-1].Salary) / 2
+				*newData.Salary = mean
+			}
+		}
+		if newData.Rating == nil {
+			if i+1 < len(draftData) && i-1 >= 0 {
+				newData.Rating = new(float64)
+				mean := (*draftData[i+1].Rating + *draftData[i-1].Rating) / 2
+				*newData.Rating = mean
+			}
+		}
+		if newData.Avg_Grade_Given == nil {
+			if i+1 < len(draftData) && i-1 >= 0 {
+				newData.Avg_Grade_Given = new(float64)
+				mean := (*draftData[i+1].Avg_Grade_Given + *draftData[i-1].Avg_Grade_Given) / 2
+				*newData.Avg_Grade_Given = mean
+			}
+		}
+		finalData = append(finalData, newData)
+	}
+	_, err = dec.Token()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return finalData
+}
 func PrintResult(sample_data []SampleData) {
 	for i, data := range sample_data {
 
